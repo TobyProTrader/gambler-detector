@@ -492,6 +492,9 @@ def analyze():
         return f"Processing error: {e}", 500
 
     return render_template_string(RESULT_HTML, **results)
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)), debug=True)
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    debug_mode = os.environ.get("DEBUG", "True").lower() in ("true", "1", "yes")
+    app.run(host="0.0.0.0", port=port, debug=debug_mode)
+
