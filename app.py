@@ -214,7 +214,7 @@ def process_dataframe(raw: pd.DataFrame, STARTING_BALANCE: float, MAX_LOSS_LIMIT
                 raw_p = float(r.get('_p', 0.0)); commv = float(r.get('_c', 0.0)); swapv = float(r.get('_s', 0.0))
                 net = raw_p + commv + swapv
                 sym = r[cols.get('symbol')] if (cols.get('symbol') in raw2.columns) else "Unknown"
-                vol = clean_num(r[cols.get('volume')]) if (cols.get('volume') in raw2.columns) else 0.0
+                vol = clean_num(r[cols.get('volume')]) if cols.get('volume') in raw2.columns else 0.0
                 trades.append({'entry_time': t, 'exit_time': t, 'raw_p': raw_p, 'comm': commv, 'swap': swapv,
                                'profit': net, 'symbol': sym, 'volume': vol})
         df = pd.DataFrame(trades)
@@ -492,9 +492,3 @@ def analyze():
         return f"Processing error: {e}", 500
 
     return render_template_string(RESULT_HTML, **results)
-if __name__ == '__main__':
-    import os
-    port = int(os.environ.get("PORT", 5000))
-    debug_mode = os.environ.get("DEBUG", "True").lower() in ("true", "1", "yes")
-    app.run(host="0.0.0.0", port=port, debug=debug_mode)
-
